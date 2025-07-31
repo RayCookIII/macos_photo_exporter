@@ -43,19 +43,25 @@ def export(export_path: str, from_date: str, to_date: str, library_path: str) ->
         photosdb = osxphotos.PhotosDB()
 
     # Retrieve information for the photos within the dates requested
-    photos = photosdb.query(osxphotos.QueryOptions(from_date=photo_from_date, to_date=photo_to_date, photos=True))
+    photos = photosdb.query(
+        osxphotos.QueryOptions(from_date=photo_from_date, to_date=photo_to_date, photos=True)
+    )
 
     for photo in photos:
         # Make sure the photo file exists
         if not photo.ismissing:
             # Construct the target folder based on the date the photo was taken
-            export_target = os.path.join(export_path, photo.date.strftime('%Y'), photo.date.strftime('%Y-%m-%d'))
+            export_target = os.path.join(
+                export_path, photo.date.strftime('%Y'),
+                photo.date.strftime('%Y-%m-%d')
+            )
 
             # Create the target directory if it does not exist
             if not os.path.isdir(export_target):
                 os.makedirs(export_target)
 
-            # Export the photo. Only export the uneditied versions and overwrite if it already exists.
+            # Export the photo. Only export the uneditied versions and overwrite if it already
+            # exists.
             photo.export(export_target, overwrite=True)
             print(f'Exported photo {photo.original_filename} to {export_target}')
         else:
